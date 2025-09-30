@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { db } from '../firebase';
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [craftedCount, setCraftedCount] = useState(0);
 
-  // Recetas predefinidas
+  // Recetas del juego
   const defaultRecipes = [
     {
       id: 1,
@@ -73,6 +72,22 @@ function Recipes() {
       ingredients: ['🪵', '🪵', '🪵', '🪵', '🪵', '🪵', '🪵'],
       result: '🪜',
       description: 'Para subir y bajar niveles'
+    },
+    {
+      id: 9,
+      name: 'Cofre',
+      category: 'decoration',
+      ingredients: ['🟫', '🟫', '🟫', '🟫', '🟫', '🟫', '🟫', '🟫'],
+      result: '📦',
+      description: 'Almacena items'
+    },
+    {
+      id: 10,
+      name: 'Espada de Diamante',
+      category: 'weapons',
+      ingredients: ['💎', '💎', '🪵'],
+      result: '⚔️',
+      description: 'Arma poderosa'
     }
   ];
 
@@ -86,45 +101,25 @@ function Recipes() {
 
   useEffect(() => {
     loadRecipes();
+    loadCraftedCount();
   }, []);
 
-  // Carga recetas desde Firebase o usa las predefinidas
-  const loadRecipes = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'recipes'));
-      const firebaseRecipes = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      
-      if (firebaseRecipes.length > 0) {
-        setRecipes(firebaseRecipes);
-      } else {
-        setRecipes(defaultRecipes);
-      }
-    } catch (error) {
-      console.log('Error cargando recetas:', error);
-      // Usa recetas locales si no hay conexión
-      const savedRecipes = localStorage.getItem('recipes');
-      if (savedRecipes) {
-        setRecipes(JSON.parse(savedRecipes));
-      } else {
-        setRecipes(defaultRecipes);
-      }
+  // Carga recetas desde localStorage o usa las predefinidas
+  const loadRecipes = () => {
+    const savedRecipes = localStorage.getItem('recipes');
+    if (savedRecipes) {
+      setRecipes(JSON.parse(savedRecipes));
+    } else {
+      setRecipes(defaultRecipes);
+      localStorage.setItem('recipes', JSON.stringify(defaultRecipes));
     }
   };
 
-  // Guarda nueva receta personalizada
-  const saveCustomRecipe = async (recipe) => {
-    try {
-      await addDoc(collection(db, 'recipes'), recipe);
-      loadRecipes(); // Recarga las recetas
-    } catch (error) {
-      console.log('Error guardando receta:', error);
-      // Guarda localmente si no hay conexión
-      const currentRecipes = [...recipes, recipe];
-      setRecipes(currentRecipes);
-      localStorage.setItem('recipes', JSON.stringify(currentRecipes));
+  // Carga contador de items creados
+  const loadCraftedCount = () => {
+    const count = localStorage.getItem('craftedCount');
+    if (count) {
+      setCraftedCount(parseInt(count));
     }
   };
 
@@ -135,26 +130,57 @@ function Recipes() {
     return matchesSearch && matchesCategory;
   });
 
-  // Crea una receta (simulación)
+  // Crea una receta
   const craftRecipe = (recipe) => {
+    // Vibración
     if ('vibrate' in navigator) {
-      navigator.vibrate([100, 50, 100]);
+      navigator.vibrate([100, 50, 100, 50, 200]);
     }
+    
     // Notificación
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Minecraft PWA', {
-        body: `¡Creaste ${recipe.name}!`,
-        icon: '/logo192.png'
+        body: `¡Creaste ${recipe.name}! ${recipe.result}`,
+        icon: '/logo192.png',
+        tag: 'craft-' + recipe.id,
+        vibrate: [100, 50, 100]
       });
     }
 
-    // Efecto visual simple
+    // Actualiza contador
+    const newCount = craftedCount + 1;
+    setCraftedCount(newCount);
+    localStorage.setItem('craftedCount', newCount.toString());
+
+    // Efecto visual
     const button = document.querySelector(`#craft-${recipe.id}`);
     if (button) {
       button.style.background = '#4CAF50';
+      button.textContent = '✅ ¡Creado!';
       setTimeout(() => {
         button.style.background = '';
-      }, 500);
+        button.textContent = '🔨 Crear';
+      }, 1000);
+    }
+
+    // Añade al inventario si existe
+    addToInventory(recipe.result);
+  };
+
+  // Añade item al inventario
+  const addToInventory = (itemEmoji) => {
+    const savedInventory = localStorage.getItem('inventory');
+    let inventory = savedInventory ? JSON.parse(savedInventory) : Array(36).fill(null);
+    
+    const firstEmpty = inventory.findIndex(slot => slot === null);
+    if (firstEmpty !== -1) {
+      inventory[firstEmpty] = {
+        emoji: itemEmoji,
+        name: 'Item Creado',
+        quantity: 1,
+        id: Date.now()
+      };
+      localStorage.setItem('inventory', JSON.stringify(inventory));
     }
   };
 
@@ -164,6 +190,11 @@ function Recipes() {
       <div className="recipes-header">
         <Link to="/" className="back-btn">← Volver</Link>
         <h1>📝 Recetas</h1>
+      </div>
+
+      {/* Estadísticas */}
+      <div className="stats-banner">
+        🔨 Items creados: {craftedCount}
       </div>
 
       {/* Buscador y filtros */}
@@ -180,7 +211,12 @@ function Recipes() {
           {categories.map(category => (
             <button
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => {
+                setSelectedCategory(category.id);
+                if ('vibrate' in navigator) {
+                  navigator.vibrate(50);
+                }
+              }}
               className={`filter-btn ${selectedCategory === category.id ? 'active' : ''}`}
             >
               {category.emoji} {category.name}
@@ -192,10 +228,19 @@ function Recipes() {
       {/* Lista de recetas */}
       <div className="recipes-list">
         {filteredRecipes.length === 0 ? (
-          <p className="no-recipes">No se encontraron recetas</p>
+          <div className="no-recipes">
+            <p>❌ No se encontraron recetas</p>
+            <p style={{fontSize: '10px', opacity: 0.7}}>
+              Intenta con otro término de búsqueda
+            </p>
+          </div>
         ) : (
-          filteredRecipes.map(recipe => (
-            <div key={recipe.id} className="recipe-card">
+          filteredRecipes.map((recipe, index) => (
+            <div 
+              key={recipe.id} 
+              className="recipe-card"
+              style={{animationDelay: `${index * 0.05}s`}}
+            >
               <div className="recipe-header">
                 <h3>{recipe.result} {recipe.name}</h3>
                 <span className="recipe-category">
@@ -207,8 +252,8 @@ function Recipes() {
                 <div className="ingredients">
                   <h4>Ingredientes:</h4>
                   <div className="ingredients-grid">
-                    {recipe.ingredients.map((ingredient, index) => (
-                      <div key={index} className="ingredient-slot">
+                    {recipe.ingredients.map((ingredient, idx) => (
+                      <div key={idx} className="ingredient-slot">
                         {ingredient}
                       </div>
                     ))}
@@ -258,6 +303,16 @@ function Recipes() {
           padding: 8px;
         }
 
+        .stats-banner {
+          background: #1B5E20;
+          padding: 12px;
+          border-radius: 8px;
+          text-align: center;
+          margin-bottom: 20px;
+          font-size: 14px;
+          border: 2px solid #2E7D32;
+        }
+
         .search-section {
           margin-bottom: 30px;
           text-align: center;
@@ -278,6 +333,11 @@ function Recipes() {
 
         .search-input::placeholder {
           color: #90A4AE;
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: #4CAF50;
         }
 
         .category-filters {
@@ -301,11 +361,17 @@ function Recipes() {
 
         .filter-btn:hover {
           background: #8D6E63;
+          transform: translateY(-2px);
+        }
+
+        .filter-btn:active {
+          transform: translateY(0);
         }
 
         .filter-btn.active {
           background: #4CAF50;
           border-color: #388E3C;
+          box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
         }
 
         .recipes-list {
@@ -317,6 +383,13 @@ function Recipes() {
           text-align: center;
           opacity: 0.7;
           font-size: 14px;
+          padding: 40px 20px;
+          background: #37474F;
+          border-radius: 8px;
+        }
+
+        .no-recipes p {
+          margin: 8px 0;
         }
 
         .recipe-card {
@@ -325,6 +398,19 @@ function Recipes() {
           margin-bottom: 16px;
           padding: 16px;
           border-radius: 8px;
+          animation: fadeInUp 0.3s ease forwards;
+          opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
         }
 
         .recipe-header {
@@ -374,11 +460,26 @@ function Recipes() {
           align-items: center;
           justify-content: center;
           font-size: 16px;
+          transition: transform 0.2s;
+        }
+
+        .ingredient-slot:hover {
+          transform: scale(1.1);
         }
 
         .recipe-arrow {
           font-size: 20px;
           opacity: 0.7;
+          animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.7;
+          }
+          50% {
+            opacity: 1;
+          }
         }
 
         .result-item {
@@ -415,6 +516,11 @@ function Recipes() {
         .craft-btn:hover {
           background: #FFB74D;
           transform: scale(1.02);
+          box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+        }
+
+        .craft-btn:active {
+          transform: scale(0.98);
         }
 
         @media (max-width: 768px) {

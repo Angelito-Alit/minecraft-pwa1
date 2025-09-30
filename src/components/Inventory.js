@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
 
 function Inventory() {
   const [inventory, setInventory] = useState(Array(36).fill(null));
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [location, setLocation] = useState(null);
 
-  // Items en el juego
+  // Items disponibles
   const availableItems = [
     { id: 'dirt', name: 'Tierra', emoji: '🟤' },
     { id: 'stone', name: 'Piedra', emoji: '⬛' },
@@ -27,31 +25,18 @@ function Inventory() {
     getLocation();
   }, []);
 
-  // Carga inventario desde Firebase
-  const loadInventory = async () => {
-    try {
-      const docRef = doc(db, 'players', 'player1');
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        setInventory(docSnap.data().inventory || Array(36).fill(null));
-      }
-    } catch (error) {
-      const savedInventory = localStorage.getItem('inventory');
-      if (savedInventory) {
-        setInventory(JSON.parse(savedInventory));
-      }
+  // Carga inventario desde localStorage
+  const loadInventory = () => {
+    const savedInventory = localStorage.getItem('inventory');
+    if (savedInventory) {
+      setInventory(JSON.parse(savedInventory));
     }
   };
 
-  // Guarda inventario
-  const saveInventory = async (newInventory) => {
-    try {
-      const docRef = doc(db, 'players', 'player1');
-      await setDoc(docRef, { inventory: newInventory }, { merge: true });
-    } catch (error) {
-      localStorage.setItem('inventory', JSON.stringify(newInventory));
-    }
+  // Guarda inventario en localStorage
+  const saveInventory = (newInventory) => {
+    setInventory(newInventory);
+    localStorage.setItem('inventory', JSON.stringify(newInventory));
   };
 
   // Obtiene ubicación del dispositivo
@@ -82,12 +67,23 @@ function Inventory() {
         quantity: 1,
         id: Date.now()
       };
-      setInventory(newInventory);
       saveInventory(newInventory);
       
+      // Vibración
       if ('vibrate' in navigator) {
         navigator.vibrate(100);
       }
+
+      // Notificación
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Minecraft PWA', {
+          body: `Añadido: ${item.name}`,
+          icon: '/logo192.png',
+          tag: 'inventory-add'
+        });
+      }
+    } else {
+      alert('❌ Inventario lleno');
     }
   };
 
@@ -95,21 +91,26 @@ function Inventory() {
   const removeItem = (slotIndex) => {
     const newInventory = [...inventory];
     newInventory[slotIndex] = null;
-    setInventory(newInventory);
     saveInventory(newInventory);
     setSelectedSlot(null);
+
+    if ('vibrate' in navigator) {
+      navigator.vibrate([50, 50]);
+    }
   };
 
+  // Usa un item
   const useItem = (slotIndex) => {
     const item = inventory[slotIndex];
     if (item) {
-      // Usar el item
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('Minecraft PWA', {
           body: `Usaste ${item.name}!`,
-          icon: '/logo192.png'
+          icon: '/logo192.png',
+          tag: 'item-use'
         });
       }
+      
       if ('vibrate' in navigator) {
         navigator.vibrate([50, 50, 50]);
       }
@@ -124,11 +125,15 @@ function Inventory() {
         <h1>🎒 Inventario</h1>
       </div>
 
-
+      {location && (
+        <div className="location-info">
+          📍 Ubicación: {location.lat}, {location.lng}
+        </div>
+      )}
 
       {/* Grid del inventario */}
       <div className="inventory-container">
-        <h2>Tus Items</h2>
+        <h2>Tus Items ({inventory.filter(i => i !== null).length}/36)</h2>
         <div className="inventory-grid">
           {inventory.map((item, index) => (
             <div
@@ -156,13 +161,13 @@ function Inventory() {
               onClick={() => useItem(selectedSlot)}
               className="minecraft-btn"
             >
-               Usar
+              ✨ Usar
             </button>
             <button 
               onClick={() => removeItem(selectedSlot)}
               className="minecraft-btn danger"
             >
-              Eliminar
+              🗑️ Eliminar
             </button>
           </div>
         )}
@@ -236,15 +241,18 @@ function Inventory() {
           justify-content: center;
           cursor: pointer;
           position: relative;
+          transition: all 0.2s;
         }
 
         .inventory-slot:hover {
           background: #616161;
+          transform: scale(1.05);
         }
 
         .inventory-slot.selected {
           border-color: #4CAF50;
           background: #4CAF50;
+          box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
         }
 
         .item {
@@ -277,6 +285,18 @@ function Inventory() {
           border-radius: 8px;
           margin: 16px auto;
           max-width: 300px;
+          animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .item-actions h3 {
@@ -287,6 +307,10 @@ function Inventory() {
         .minecraft-btn.danger {
           background: #F44336;
           border-color: #D32F2F;
+        }
+
+        .minecraft-btn.danger:hover {
+          background: #E57373;
         }
 
         .available-items {
@@ -310,10 +334,16 @@ function Inventory() {
           cursor: pointer;
           font-family: inherit;
           font-size: 12px;
+          transition: all 0.2s;
         }
 
         .item-btn:hover {
           background: #8D6E63;
+          transform: translateY(-2px);
+        }
+
+        .item-btn:active {
+          transform: translateY(0);
         }
 
         @media (max-width: 768px) {

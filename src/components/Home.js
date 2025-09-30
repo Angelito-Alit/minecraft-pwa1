@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
 import CameraCapture from './CameraCapture';
 import DeviceFeatures from './DeviceFeatures';
 
@@ -13,43 +11,37 @@ function Home() {
   const [showDeviceFeatures, setShowDeviceFeatures] = useState(false);
 
   useEffect(() => {
-    // Obtiene información del dispositivo
-    const getDeviceInfo = async () => {
-      const features = {
-        battery: 'getBattery' in navigator ? 'Disponible' : 'No disponible',
-        vibration: 'vibrate' in navigator ? 'Disponible' : 'No disponible',
-        geolocation: 'geolocation' in navigator ? 'Disponible' : 'No disponible',
-        camera: 'mediaDevices' in navigator ? 'Disponible' : 'No disponible'
-      };
-      if ('getBattery' in navigator) {
-        try {
-          const battery = await navigator.getBattery();
-          features.battery = `${Math.round(battery.level * 100)}% - ${battery.charging ? 'Cargando' : 'Descargando'}`;
-        } catch (error) {
-          features.battery = 'Error obteniendo info';
-        }
-      }
-
-      setDeviceInfo(features);
-    };
-
     getDeviceInfo();
     loadWorldData();
+    requestNotificationPermission();
   }, []);
 
-  // Carga datos del mundo desde Firebase
-  const loadWorldData = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'worlds'));
-      const worlds = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      if (worlds.length > 0) {
-        setWorldData(worlds[0]);
+  const getDeviceInfo = async () => {
+    const features = {
+      battery: 'getBattery' in navigator ? 'Disponible' : 'No disponible',
+      vibration: 'vibrate' in navigator ? 'Disponible' : 'No disponible',
+      geolocation: 'geolocation' in navigator ? 'Disponible' : 'No disponible',
+      camera: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) ? 'Disponible' : 'No disponible'
+    };
+
+    if ('getBattery' in navigator) {
+      try {
+        const battery = await navigator.getBattery();
+        features.battery = `${Math.round(battery.level * 100)}% - ${battery.charging ? 'Cargando' : 'Descargando'}`;
+      } catch (error) {
+        features.battery = 'Error obteniendo info';
       }
-    } catch (error) {
-      console.log('Error cargando mundo:', error);
+    }
+
+    setDeviceInfo(features);
+  };
+
+  // Carga datos del mundo desde localStorage
+  const loadWorldData = () => {
+    const savedWorld = localStorage.getItem('currentWorld');
+    if (savedWorld) {
+      setWorldData(JSON.parse(savedWorld));
+    } else {
       setWorldData({
         name: 'Mi Mundo',
         seed: '12345',
@@ -58,34 +50,37 @@ function Home() {
     }
   };
 
-  // Crea un nuevo mundo
-  const createNewWorld = async () => {
+  // Crea un nuevo mundo (guarda en localStorage)
+  const createNewWorld = () => {
     const newWorld = {
       name: playerName || 'Mundo Nuevo',
       seed: Math.floor(Math.random() * 1000000),
       difficulty: 'Normal',
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     };
 
-    try {
-      await addDoc(collection(db, 'worlds'), newWorld);
-      setWorldData(newWorld);
-      showNotification('¡Nuevo mundo creado!');
-    } catch (error) {
-      console.log('Error creando mundo:', error);
-      localStorage.setItem('currentWorld', JSON.stringify(newWorld));
-      setWorldData(newWorld);
-      showNotification('Mundo creado (sin conexión)');
-    }
+    localStorage.setItem('currentWorld', JSON.stringify(newWorld));
+    setWorldData(newWorld);
+    showNotification('¡Nuevo mundo creado!');
+    handleVibration();
   };
 
-  // Muestra notificación
+  // Muestra notificación del navegador
   const showNotification = (message) => {
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Minecraft PWA', {
         body: message,
-        icon: '/logo192.png'
+        icon: '/logo192.png',
+        badge: '/logo192.png',
+        vibrate: [200, 100, 200]
       });
+    }
+  };
+
+  // Solicita permisos de notificación
+  const requestNotificationPermission = async () => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      await Notification.requestPermission();
     }
   };
 
@@ -96,18 +91,15 @@ function Home() {
     }
   };
 
- 
-  const handlePhotoTaken = (photoData) => {
-    console.log('Foto tomada:', photoData.substring(0, 50) + '...');
-    setShowCamera(false);
-  };
-
   return (
     <div className="home">
       {/* Header */}
       <header className="home-header">
         <h1>⛏️ MINECRAFT PWA</h1>
         <p>Bienvenido al mundo de bloques</p>
+        <div style={{fontSize: '10px', opacity: 0.7, marginTop: '8px'}}>
+          {navigator.onLine ? '🟢 Conectado' : '🔴 Offline'} | 100% Frontend
+        </div>
       </header>
 
       {/* Información del mundo actual */}
@@ -118,6 +110,11 @@ function Home() {
             <p><strong>Nombre:</strong> {worldData.name}</p>
             <p><strong>Semilla:</strong> {worldData.seed}</p>
             <p><strong>Dificultad:</strong> {worldData.difficulty}</p>
+            {worldData.createdAt && (
+              <p style={{fontSize: '10px', opacity: 0.7}}>
+                Creado: {new Date(worldData.createdAt).toLocaleString('es-ES')}
+              </p>
+            )}
           </div>
         ) : (
           <p>No hay mundo cargado</p>
@@ -159,13 +156,19 @@ function Home() {
         <h2>📱 Hardware del Dispositivo</h2>
         <div className="hardware-buttons">
           <button 
-            onClick={() => setShowCamera(!showCamera)}
+            onClick={() => {
+              setShowCamera(!showCamera);
+              handleVibration();
+            }}
             className="minecraft-btn"
           >
             📸 {showCamera ? 'Cerrar' : 'Abrir'} Cámara
           </button>
           <button 
-            onClick={() => setShowDeviceFeatures(!showDeviceFeatures)}
+            onClick={() => {
+              setShowDeviceFeatures(!showDeviceFeatures);
+              handleVibration();
+            }}
             className="minecraft-btn"
           >
             🔧 {showDeviceFeatures ? 'Ocultar' : 'Mostrar'} Sensores
@@ -181,14 +184,10 @@ function Home() {
       </div>
 
       {/* Componente de cámara */}
-      {showCamera && (
-        <CameraCapture onPhotoTaken={handlePhotoTaken} />
-      )}
+      {showCamera && <CameraCapture />}
 
       {/* Componente de características del dispositivo */}
-      {showDeviceFeatures && (
-        <DeviceFeatures />
-      )}
+      {showDeviceFeatures && <DeviceFeatures />}
 
       <style jsx>{`
         .home {
@@ -255,4 +254,4 @@ function Home() {
   );
 }
 
-export default Home;  
+export default Home;

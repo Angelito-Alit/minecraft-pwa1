@@ -9,18 +9,38 @@ import './App.css';
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 3000); 
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
   // Detecta si hay internet
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    const handleOnline = () => {
+      setIsOnline(true);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Minecraft PWA', {
+          body: '🟢 Conexión restaurada',
+          icon: '/logo192.png',
+          tag: 'online-status'
+        });
+      }
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Minecraft PWA', {
+          body: '🔴 Sin conexión - Modo offline activado',
+          icon: '/logo192.png',
+          tag: 'offline-status'
+        });
+      }
+    };
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -37,6 +57,20 @@ function App() {
       Notification.requestPermission();
     }
   }, []);
+
+  // Registra Service Worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registrado:', registration);
+        })
+        .catch(error => {
+          console.log('Error registrando Service Worker:', error);
+        });
+    }
+  }, []);
+
   if (showSplash) {
     return <SplashScreen />;
   }
