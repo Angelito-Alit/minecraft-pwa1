@@ -14,7 +14,7 @@ function CameraCapture() {
 
   const checkCameraSupport = () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setError('❌ La cámara no es soportada en este navegador o requiere HTTPS');
+      setError('  La cámara no es soportada en este navegador o requiere HTTPS');
       setIsSupported(false);
     } else {
       setIsSupported(true);
@@ -156,7 +156,7 @@ function CameraCapture() {
             marginTop: '8px',
             opacity: 0.7
           }}>
-            ✅ Cámara activa
+              Cámara activa
           </div>
         </div>
       )}

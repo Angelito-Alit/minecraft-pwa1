@@ -14,7 +14,7 @@
 - **PWA**: Service Workers + Web App Manifest
 - **Hardware**: APIs nativas del navegador
 
-## ✅ CRITERIOS CUMPLIDOS (100/100 puntos)
+##   CRITERIOS CUMPLIDOS (100/100 puntos)
 
 ### 1. Pantallas de Splash y Home (10/10)
 - Splash screen animado con progreso
@@ -37,7 +37,6 @@
 - 📸 Cámara que solo vizualiza el entorno
 - 🔋 Batería en tiempo real
 - 🗺️ GPS con coordenadas precisas
-- 📳 Vibración con patrones personalizados
 - 🏃 Sensores de movimiento (acelerómetro)
 
 ## 🔧 INSTALACIÓN Y USO
@@ -53,8 +52,8 @@
 - SSR: http://localhost:5000/ssr/test
 
 ## 📱 FUNCIONALIDADES DESTACADAS
-- ✅ Funciona completamente offline
-- ✅ Instalable como app nativa
-- ✅ Usa hardware real del dispositivo
-- ✅ Responsive en móvil y desktop
-- ✅ Notificaciones push reales
+-   Funciona completamente offline
+-   Instalable como app nativa
+-   Usa hardware real del dispositivo
+-   Responsive en móvil y desktop
+-   Notificaciones push reales

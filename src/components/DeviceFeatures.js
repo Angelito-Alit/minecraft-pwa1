@@ -58,7 +58,7 @@ function DeviceFeatures() {
   // Obtiene ubicación GPS
   const getLocation = () => {
     if (!('geolocation' in navigator)) {
-      alert('❌ Geolocalización no disponible en este navegador');
+      alert('  Geolocalización no disponible en este navegador');
       return;
     }
 
@@ -71,7 +71,6 @@ function DeviceFeatures() {
           timestamp: new Date(position.timestamp).toLocaleString('es-ES')
         });
         
-        // Vibración si está disponible
         if ('vibrate' in navigator) {
           navigator.vibrate([100, 50, 100]);
         }
@@ -112,10 +111,9 @@ function DeviceFeatures() {
     );
   };
 
-  // Prueba vibración
   const testVibration = () => {
     if (!('vibrate' in navigator)) {
-      alert('❌ Vibración no disponible en este dispositivo');
+      alert(' Vibración no disponible en este dispositivo');
       return;
     }
 
@@ -127,7 +125,7 @@ function DeviceFeatures() {
         // Muestra feedback visual
         if ('Notification' in window && Notification.permission === 'granted') {
           new Notification('Minecraft PWA', {
-            body: '📳 Vibración activada',
+            body: 'activada',
             icon: '/logo192.png',
             tag: 'vibration-test'
           });
@@ -135,7 +133,7 @@ function DeviceFeatures() {
       }
     } catch (error) {
       console.error('Error en vibración:', error);
-      alert('❌ Error al vibrar: ' + error.message);
+      alert('  Error al vibrar: ' + error.message);
     }
   };
 
@@ -178,7 +176,7 @@ function DeviceFeatures() {
   // Solicita permisos de notificación
   const requestNotificationPermission = async () => {
     if (!('Notification' in window)) {
-      alert('❌ Notificaciones no soportadas en este navegador');
+      alert('  Notificaciones no soportadas en este navegador');
       return;
     }
 
@@ -199,7 +197,7 @@ function DeviceFeatures() {
       }
     } catch (error) {
       console.error('Error solicitando permisos:', error);
-      alert('❌ Error al solicitar permisos de notificación');
+      alert('  Error al solicitar permisos de notificación');
     }
   };
 
@@ -242,7 +240,7 @@ function DeviceFeatures() {
             <p>Estado: {batteryInfo.charging ? '🔌 Cargando' : '🔋 Descargando'}</p>
           </div>
         ) : (
-          <p>❌ Información de batería no disponible</p>
+          <p>  Información de batería no disponible</p>
         )}
       </div>
 
@@ -261,21 +259,15 @@ function DeviceFeatures() {
         )}
       </div>
 
-      <div className="feature-section">
-        <h3>📳 Vibración</h3>
-        <button onClick={testVibration} className="minecraft-btn">
-          📳 Probar Vibración
-        </button>
-        <p>Estado: {deviceInfo.vibration ? '✅ Disponible' : '❌ No disponible'}</p>
-      </div>
+     
 
       <div className="feature-section">
         <h3>🔔 Notificaciones</h3>
         <button onClick={requestNotificationPermission} className="minecraft-btn">
           🔔 Activar Notificaciones
         </button>
-        <p>Estado: {Notification.permission === 'granted' ? '✅ Permitidas' : 
-                   Notification.permission === 'denied' ? '❌ Bloqueadas' : 
+        <p>Estado: {Notification.permission === 'granted' ? '  Permitidas' : 
+                   Notification.permission === 'denied' ? '  Bloqueadas' : 
                    '⚠️ No configuradas'}</p>
       </div>
 

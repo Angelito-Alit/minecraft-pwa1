@@ -177,7 +177,6 @@ function Home() {
         
         <div className="device-features">
           <p>🔋 Batería: {deviceInfo.battery}</p>
-          <p>📳 Vibración: {deviceInfo.vibration}</p>
           <p>🗺️ Ubicación: {deviceInfo.geolocation}</p>
           <p>📸 Cámara: {deviceInfo.camera}</p>
         </div>

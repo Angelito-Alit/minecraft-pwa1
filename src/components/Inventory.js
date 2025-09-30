@@ -83,7 +83,7 @@ function Inventory() {
         });
       }
     } else {
-      alert('❌ Inventario lleno');
+      alert('  Inventario lleno');
     }
   };
 

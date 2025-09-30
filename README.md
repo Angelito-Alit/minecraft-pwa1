@@ -3,12 +3,12 @@
 ## 📱 Aplicación Web Progresiva Completa (Sin Backend)
 
 ### ✨ Características
-- ✅ **100% Frontend** - No requiere servidor backend
-- ✅ **Hardware Real** - Acceso a cámara, GPS, sensores, vibración
-- ✅ **Offline First** - Funciona sin conexión a internet
-- ✅ **Instalable** - Se instala como app nativa
-- ✅ **Notificaciones** - Push notifications del navegador
-- ✅ **PWA Completa** - Service Workers + Manifest
+-   **100% Frontend** - No requiere servidor backend
+-   **Hardware Real** - Acceso a cámara, GPS, sensores
+-   **Offline First** - Funciona sin conexión a internet
+-   **Instalable** - Se instala como app nativa
+-   **Notificaciones** - Push notifications del navegador
+-   **PWA Completa** - Service Workers + Manifest
 
 ---
 
@@ -102,32 +102,29 @@ Todos incluyen HTTPS automático.
 
 ## 🎯 Funcionalidades Implementadas
 
-### ✅ Pantallas (10/10 puntos)
+###   Pantallas (10/10 puntos)
 - Splash screen animado con barra de progreso
 - Home responsive con navegación fluida
 - Inventario interactivo con grid de 36 slots
 - Sistema de recetas con filtros y búsqueda
 
-### ✅ Renderizado (10/10 puntos)
+###   Renderizado (10/10 puntos)
 - **CSR**: Todo el cliente con React + React Router
 - **SSR**: Puede añadirse fácilmente con Next.js si se requiere
 
-### ✅ Datos (10/10 puntos)
+###   Datos (10/10 puntos)
 - **Local**: localStorage para persistencia
 - **Remoto**: Puede integrarse con API REST
 - **Offline**: Service Worker con cache completo
 
-### ✅ Notificaciones (10/10 puntos)
+###   Notificaciones (10/10 puntos)
 - Notificaciones del navegador (Notification API)
 - Push notifications via Service Worker
-- Vibración integrada
 
-### ✅ Hardware (10/10 puntos)
+###   Hardware (10/10 puntos)
 - 📸 **Cámara**: Video en tiempo real
 - 🗺️ **GPS**: Ubicación con latitud/longitud
 - 🔋 **Batería**: Nivel y estado en tiempo real
-- 📳 **Vibración**: Patrones personalizados
-- 🏃 **Sensores**: Acelerómetro y giroscopio
 
 ---
 
@@ -162,11 +159,11 @@ minecraft-pwa/
 ## 💾 Almacenamiento Local
 
 La app usa `localStorage` para guardar:
-- ✅ Mundos creados
-- ✅ Inventario (36 slots)
-- ✅ Recetas desbloqueadas
-- ✅ Estadísticas de jugador
-- ✅ Configuración
+-   Mundos creados
+-   Inventario (36 slots)
+-   Recetas desbloqueadas
+-   Estadísticas de jugador
+-   Configuración
 
 **Todo persiste entre sesiones**, incluso sin internet.
 
@@ -178,7 +175,6 @@ La app solicita permisos para:
 - 📸 Cámara (video)
 - 🗺️ Ubicación (GPS)
 - 🔔 Notificaciones
-- 📳 Vibración (no requiere permiso)
 
 **Nota**: La cámara y ubicación **requieren HTTPS** en producción.
 
@@ -186,26 +182,26 @@ La app solicita permisos para:
 
 ## 🐛 Solución de Problemas
 
-### ❌ "La cámara no funciona"
-- ✅ Verifica que uses HTTPS (`https://`)
-- ✅ Acepta los permisos cuando los solicite
-- ✅ Prueba en Chrome/Firefox (mejor compatibilidad)
+###   "La cámara no funciona"
+-   Verifica que uses HTTPS (`https://`)
+-   Acepta los permisos cuando los solicite
+-   Prueba en Chrome/Firefox (mejor compatibilidad)
 
-### ❌ "No puedo acceder desde el celular"
-- ✅ Ambos dispositivos en la misma WiFi
-- ✅ Usa la IP correcta (no localhost)
-- ✅ Acepta el certificado auto-firmado
-- ✅ Revisa el firewall de tu PC
+###   "No puedo acceder desde el celular"
+-   Ambos dispositivos en la misma WiFi
+-   Usa la IP correcta (no localhost)
+-   Acepta el certificado auto-firmado
+-   Revisa el firewall de tu PC
 
-### ❌ "Service Worker no se registra"
-- ✅ Solo funciona en HTTPS o localhost
-- ✅ Limpia cache del navegador
-- ✅ Revisa DevTools > Application > Service Workers
+###   "Service Worker no se registra"
+-   Solo funciona en HTTPS o localhost
+-   Limpia cache del navegador
+-   Revisa DevTools > Application > Service Workers
 
-### ❌ "Las notificaciones no aparecen"
-- ✅ Acepta los permisos de notificación
-- ✅ Verifica configuración del navegador
-- ✅ En móvil, revisa "Notificaciones del sitio"
+###   "Las notificaciones no aparecen"
+-   Acepta los permisos de notificación
+-   Verifica configuración del navegador
+-   En móvil, revisa "Notificaciones del sitio"
 
 ---
 
@@ -226,7 +222,6 @@ La app solicita permisos para:
 4. **Hardware**
    - Botón "Abrir Cámara" → Video en tiempo real
    - Botón "Obtener Ubicación" → Coordenadas GPS
-   - Botón "Probar Vibración" → Vibración física
    - Sección batería → Porcentaje actualizado
 
 ---
@@ -240,7 +235,6 @@ La app solicita permisos para:
 3. **Hardware**:
    - Activa la cámara (muestra video)
    - Obtén ubicación GPS (coordenadas)
-   - Prueba vibración
    - Muestra nivel de batería
 4. **Inventario**: Añade items, usa, elimina
 5. **Recetas**: Filtra, busca, crea items
@@ -249,14 +243,14 @@ La app solicita permisos para:
 8. **Instalar**: Muestra cómo instalar como app
 
 ### Capturas de pantalla necesarias:
-- ✅ Splash screen
-- ✅ Home completo
-- ✅ Cámara funcionando
-- ✅ GPS con coordenadas
-- ✅ Inventario con items
-- ✅ Recetas filtradas
-- ✅ Notificación
-- ✅ App instalada
+-   Splash screen
+-   Home completo
+-   Cámara funcionando
+-   GPS con coordenadas
+-   Inventario con items
+-   Recetas filtradas
+-   Notificación
+-   App instalada
 
 ---
 
@@ -282,13 +276,13 @@ npm run build
 
 ---
 
-## ✅ Criterios de Evaluación Cumplidos
+##   Criterios de Evaluación Cumplidos
 
-- ✅ **10 pts** - Splash + Home responsivo
-- ✅ **10 pts** - CSR completo (puede añadir SSR)
-- ✅ **10 pts** - Local (localStorage) + Offline (SW)
-- ✅ **10 pts** - Notificaciones navegador + push
-- ✅ **10 pts** - Cámara + GPS + Batería + Vibración + Sensores
+-   **10 pts** - Splash + Home responsivo
+-   **10 pts** - CSR completo (puede añadir SSR)
+-   **10 pts** - Local (localStorage) + Offline (SW)
+-   **10 pts** - Notificaciones navegador + push
+-   **10 pts** - Cámara + GPS + Batería + Vibración + Sensores
 
 **Total: 50/50 puntos base**
 

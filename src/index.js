@@ -31,7 +31,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then(registration => {
-        console.log('✅ Service Worker registrado:', registration.scope);
+        console.log('  Service Worker registrado:', registration.scope);
         
         // Verifica actualizaciones
         registration.addEventListener('updatefound', () => {
@@ -47,7 +47,7 @@ if ('serviceWorker' in navigator) {
         });
       })
       .catch(error => {
-        console.log('❌ Error registrando Service Worker:', error);
+        console.log('  Error registrando Service Worker:', error);
       });
   });
 }
@@ -94,7 +94,7 @@ function showInstallButton() {
       const choiceResult = await window.deferredPrompt.userChoice;
       
       if (choiceResult.outcome === 'accepted') {
-        console.log('✅ Usuario instaló la PWA');
+        console.log('  Usuario instaló la PWA');
         
         // Notificación de instalación exitosa
         if ('Notification' in window && Notification.permission === 'granted') {
@@ -105,7 +105,7 @@ function showInstallButton() {
           });
         }
       } else {
-        console.log('❌ Usuario canceló la instalación');
+        console.log('  Usuario canceló la instalación');
       }
       
       window.deferredPrompt = null;
@@ -118,7 +118,7 @@ function showInstallButton() {
 
 // Maneja cuando la app ya fue instalada
 window.addEventListener('appinstalled', () => {
-  console.log('✅ PWA instalada');
+  console.log('  PWA instalada');
   
   // Oculta el botón de instalación si existe
   const installBtn = document.querySelector('.install-btn');
@@ -164,9 +164,8 @@ console.log('📱 Información del dispositivo:');
 console.log('- User Agent:', navigator.userAgent);
 console.log('- Platform:', navigator.platform);
 console.log('- Online:', navigator.onLine);
-console.log('- Service Worker:', 'serviceWorker' in navigator ? '✅' : '❌');
-console.log('- Notificaciones:', 'Notification' in window ? '✅' : '❌');
-console.log('- Cámara:', navigator.mediaDevices ? '✅' : '❌');
-console.log('- GPS:', 'geolocation' in navigator ? '✅' : '❌');
-console.log('- Vibración:', 'vibrate' in navigator ? '✅' : '❌');
-console.log('- Batería:', 'getBattery' in navigator ? '✅' : '❌');
+console.log('- Service Worker:', 'serviceWorker' in navigator ? ' ' : ' ');
+console.log('- Notificaciones:', 'Notification' in window ? ' ' : ' ');
+console.log('- Cámara:', navigator.mediaDevices ? ' ' : ' ');
+console.log('- GPS:', 'geolocation' in navigator ? ' ' : ' ');
+console.log('- Batería:', 'getBattery' in navigator ? ' ' : ' ');

@@ -156,7 +156,7 @@ function Recipes() {
     const button = document.querySelector(`#craft-${recipe.id}`);
     if (button) {
       button.style.background = '#4CAF50';
-      button.textContent = '✅ ¡Creado!';
+      button.textContent = '  ¡Creado!';
       setTimeout(() => {
         button.style.background = '';
         button.textContent = '🔨 Crear';
@@ -229,7 +229,7 @@ function Recipes() {
       <div className="recipes-list">
         {filteredRecipes.length === 0 ? (
           <div className="no-recipes">
-            <p>❌ No se encontraron recetas</p>
+            <p>  No se encontraron recetas</p>
             <p style={{fontSize: '10px', opacity: 0.7}}>
               Intenta con otro término de búsqueda
             </p>
