@@ -1,0 +1,142 @@
+/* Estilos estilo Minecraft */
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(45deg, #4CAF50, #2E7D32);
+  color: white;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.offline-banner {
+  background: #ff5722;
+  color: white;
+  padding: 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  font-size: 12px;
+}
+
+/* Botones estilo Minecraft */
+.minecraft-btn {
+  background: #8BC34A;
+  border: 4px solid #689F38;
+  color: white;
+  padding: 12px 24px;
+  margin: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.1s;
+}
+
+.minecraft-btn:hover {
+  background: #9CCC65;
+  transform: scale(1.05);
+}
+
+.minecraft-btn:active {
+  transform: scale(0.95);
+}
+
+/* Tarjetas estilo bloques */
+.block-card {
+  background: #795548;
+  border: 4px solid #5D4037;
+  margin: 16px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Inventario grid */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.inventory-slot {
+  aspect-ratio: 1;
+  background: #424242;
+  border: 2px solid #616161;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.inventory-slot:hover {
+  background: #616161;
+}
+
+/* Recetas */
+.recipe {
+  background: #3E2723;
+  border: 3px solid #2E1B14;
+  margin: 12px;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.recipe-ingredients {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.ingredient {
+  background: #6D4C41;
+  border: 2px solid #4E2A1C;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Navegación */
+.nav-bar {
+  background: #1B5E20;
+  padding: 16px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  padding: 8px;
+}
+
+.nav-item:hover {
+  background: #2E7D32;
+  border-radius: 4px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .minecraft-btn {
+    width: 90%;
+    margin: 8px auto;
+    display: block;
+  }
+  
+  .block-card {
+    margin: 8px;
+    padding: 12px;
+  }
+}
