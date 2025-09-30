@@ -1,8 +1,8 @@
-# 🎮 Minecraft PWA - 100% Frontend
+#  Minecraft PWA - 100% Frontend
 
-## 📱 Aplicación Web Progresiva Completa (Sin Backend)
+##  Aplicación Web Progresiva Completa (Sin Backend)
 
-### ✨ Características
+###  Características
 -   **100% Frontend** - No requiere servidor backend
 -   **Hardware Real** - Acceso a cámara, GPS, sensores
 -   **Offline First** - Funciona sin conexión a internet
@@ -12,20 +12,20 @@
 
 ---
 
-## 🚀 Instalación Rápida
+##  Instalación Rápida
 
-### 1️⃣ Instalar dependencias
+### 1️ Instalar dependencias
 ```bash
 npm install
 ```
 
-### 2️⃣ Iniciar en desarrollo (HTTP)
+### 2️ Iniciar en desarrollo (HTTP)
 ```bash
 npm start
 ```
 Abre: `http://localhost:3000`
 
-### 3️⃣ Iniciar con HTTPS (para hardware móvil)
+### 3️ Iniciar con HTTPS (para hardware móvil)
 ```bash
 # Windows (CMD)
 set HTTPS=true && npm start
@@ -39,7 +39,7 @@ HTTPS=true npm start
 # O edita .env y añade: HTTPS=true
 ```
 
-### 4️⃣ Build para producción
+### 4️ Build para producción
 ```bash
 npm run build
 npm run serve
@@ -100,7 +100,7 @@ Todos incluyen HTTPS automático.
 
 ---
 
-## 🎯 Funcionalidades Implementadas
+##  Funcionalidades Implementadas
 
 ###   Pantallas (10/10 puntos)
 - Splash screen animado con barra de progreso
@@ -122,13 +122,13 @@ Todos incluyen HTTPS automático.
 - Push notifications via Service Worker
 
 ###   Hardware (10/10 puntos)
-- 📸 **Cámara**: Video en tiempo real
-- 🗺️ **GPS**: Ubicación con latitud/longitud
-- 🔋 **Batería**: Nivel y estado en tiempo real
+-  **Cámara**: Video en tiempo real
+-  **GPS**: Ubicación con latitud/longitud
+- **Batería**: Nivel y estado en tiempo real
 
 ---
 
-## 🔧 Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```
 minecraft-pwa/
@@ -156,7 +156,7 @@ minecraft-pwa/
 
 ---
 
-## 💾 Almacenamiento Local
+##  Almacenamiento Local
 
 La app usa `localStorage` para guardar:
 -   Mundos creados
@@ -169,18 +169,18 @@ La app usa `localStorage` para guardar:
 
 ---
 
-## 🔒 Seguridad y Permisos
+##  Seguridad y Permisos
 
 La app solicita permisos para:
-- 📸 Cámara (video)
-- 🗺️ Ubicación (GPS)
-- 🔔 Notificaciones
+-  Cámara (video)
+-  Ubicación (GPS)
+-  Notificaciones
 
 **Nota**: La cámara y ubicación **requieren HTTPS** en producción.
 
 ---
 
-## 🐛 Solución de Problemas
+##  Solución de Problemas
 
 ###   "La cámara no funciona"
 -   Verifica que uses HTTPS (`https://`)
@@ -205,7 +205,7 @@ La app solicita permisos para:
 
 ---
 
-## 📊 Verificar que Todo Funciona
+##  Verificar que Todo Funciona
 
 1. **PWA**
    - DevTools > Application > Service Workers
@@ -226,7 +226,7 @@ La app solicita permisos para:
 
 ---
 
-## 🎓 Para la Entrega Final
+##  Para la Entrega Final
 
 ### Demostración recomendada:
 
@@ -254,7 +254,7 @@ La app solicita permisos para:
 
 ---
 
-## 🚀 Despliegue en Producción
+##  Despliegue en Producción
 
 ### Vercel (Recomendado):
 ```bash
@@ -288,7 +288,7 @@ npm run build
 
 ---
 
-## 📞 Soporte
+##  Soporte
 
 Si tienes problemas:
 1. Revisa esta documentación completa
@@ -298,6 +298,6 @@ Si tienes problemas:
 
 ---
 
-## 🎉 ¡Listo!
+##  ¡Listo!
 
 Tu PWA Minecraft está **100% funcional** y lista para demostrar todas las capacidades de una Progressive Web App moderna.
